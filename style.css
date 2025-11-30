@@ -1,0 +1,177 @@
+:root{
+  --scale:1.25;
+  --font-base:16px;
+  /* Simple Blue Theme */
+  --bg: #f0f2f5;
+  --muted:#64748b;
+  --accent:#2563eb; /* Professional Blue */
+  --accent-700:#1d4ed8;
+  --card:#ffffff;
+  --radius:12px;
+  --shadow-sm: 0 4px 12px rgba(12,18,30,0.05);
+  --shadow-lg: 0 12px 32px rgba(12,18,30,0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html,body{height:100%;margin:0;background:linear-gradient(180deg, var(--bg) 0%, #eef2ff 100%);color:#1e293b;-webkit-font-smoothing:antialiased;font-size:var(--font-base)}
+/* Tightened max-width for better alignment */
+.app{max-width:1200px;margin:0 auto;padding:20px;min-height:100vh;display:flex;flex-direction:column;gap:20px}
+
+/* top bar */
+.topbar{display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:var(--radius);background:linear-gradient(90deg,var(--accent),var(--accent-700));color:white;box-shadow:var(--shadow-sm); position: relative; z-index: 10;}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{width:48px;height:48px;border-radius:10px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center}
+.brand .title{font-weight:800;font-size:20px;letter-spacing:-0.5px}
+.brand-sub{font-size:13px;color:rgba(255,255,255,0.85)}
+.topbar .spacer{flex:1}
+.topbar button{background:transparent;border:0;color:white;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:600;font-size:14px}
+.topbar .btn-ghost{background:rgba(255,255,255,0.15)}
+.topbar .btn-ghost:hover{background:rgba(255,255,255,0.25)}
+.clock{font-weight:600;font-size:16px;opacity:0.9}
+
+/* Hiding elements when not logged in */
+.topbar-actions { visibility: hidden; opacity: 0; transition: opacity 0.3s ease; }
+.app.logged-in .topbar-actions { visibility: visible; opacity: 1; }
+.preview .panel { display: none; }
+.app.logged-in .preview .panel { display: block; animation: fadeIn 0.5s ease forwards; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* Main layout structure */
+.screens{display:grid;grid-template-columns:1fr;gap:24px;align-items:start}
+/* Adjusted breakpoint for global sidebar */
+@media(min-width:1100px){ .app.logged-in .screens{grid-template-columns:1fr 300px;} }
+
+/* General Card / Panel styling */
+.panel{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm);border:1px solid rgba(255,255,255,0.5)}
+.panel-title h3 { margin: 0 0 4px 0; font-size: 22px; font-weight: 700; }
+.card-compact{padding:18px;}
+
+/* Searchbar */
+.searchbar{display:flex;gap:12px;align-items:center;margin-bottom: 0px;}
+.searchbar input{flex:1;padding:12px 16px;border-radius:10px;border:1px solid #cbd5e1;font-size:15px;transition:border-color 0.2s}
+.searchbar input:focus{outline:none;border-color:var(--accent)}
+.searchbar .btn-search{padding:12px 18px;border-radius:10px;border:0;background:var(--accent);color:white;cursor:pointer;font-weight:700}
+.searchbar .btn-search:hover{background:var(--accent-700)}
+
+/* Spots Grid & Spot Card */
+.spots-grid{display:grid;gap:14px;margin-top:0}
+@media(min-width:700px){ .spots-grid{grid-template-columns:repeat(2,1fr);} }
+
+.spot{display:flex;gap:14px;align-items:center;padding:16px;border-radius:var(--radius);border:1px solid #e2e8f0;cursor:pointer;background:white;transition:all .15s ease}
+.spot:hover{border-color:var(--accent);box-shadow:var(--shadow-sm);transform:translateY(-2px)}
+.spot .icon{width:64px;height:64px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+.spot h4{margin:0;font-size:17px;font-weight:700}
+.spot p{margin:4px 0 0;font-size:14px;color:var(--muted)}
+.spot .meta{flex:1}
+.spot .status{font-weight:700;padding:6px 10px;border-radius:8px;font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+.status-available{background:#ecfdf5;color:#059669;border:1px solid #d1fae5}
+.status-reserved{background:#fef2f2;color:#dc2626;border:1px solid #fee2e2}
+
+/* favorite star */
+.fav-btn{background:transparent;border:0;cursor:pointer;font-size:22px;color:#cbd5e1;padding:4px;border-radius:6px;transition:color 0.2s}
+.fav-btn:hover{color:#94a3b8}
+.fav-btn.active{color:#f59e0b}
+
+/* right column (preview / account) */
+.preview{display:flex;flex-direction:column;gap:18px}
+.account{display:flex;gap:14px;align-items:center}
+.account .avatar{width:56px;height:56px;border-radius:10px;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.account .name{font-weight:800;font-size:17px}
+.small-muted{font-size:14px;color:var(--muted)}
+
+/* screens visibility */
+.screen{display:none}
+.screen.active{display:block;animation:fadeIn 0.3s ease}
+
+/* Login Screen specific styling */
+#screen-login { max-width: 450px; margin: 40px auto; text-align: center; padding: 40px; }
+#screen-login .panel-title h3 { font-size: 28px; margin-bottom: 8px; }
+#screen-login .form-row { text-align: left; }
+
+/* Illustration containers (removed login-illu-container) */
+.confirm-illu-container, .empty-illu-container { display: flex; justify-content: center; margin-bottom: 24px; }
+.illu-svg { width: 180px; height: auto; max-height: 140px; }
+.empty-illu-container { margin-top: 40px; margin-bottom: 20px; flex-direction: column; align-items: center; }
+.empty-illu-container .illu-svg { width: 120px; opacity: 0.7; }
+
+/* forms */
+.form-row{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.form-row label{font-size:14px;color:#475569;font-weight:600}
+.form-row input, .form-row select, .form-row textarea{padding:12px;border-radius:10px;border:1px solid #cbd5e1;font-size:15px;transition:border-color 0.2s}
+.form-row input:focus{outline:none;border-color:var(--accent)}
+.actions{display:flex;gap:12px;margin-top:24px}
+
+/* primary buttons */
+.btn{padding:12px 20px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:15px;transition:all 0.2s}
+.btn-primary{background:var(--accent);color:white;}
+.btn-primary:hover{background:var(--accent-700);box-shadow:0 4px 12px rgba(37,99,235,0.2)}
+.btn-ghost{background:white;border:1px solid #e2e8f0;color:#475569}
+.btn-ghost:hover{border-color:#cbd5e1;background:#f8fafc}
+
+/* overlays / modals */
+.overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,0.6);z-index:140;padding:20px;backdrop-filter:blur(2px)}
+.overlay.active{display:flex;animation:fadeIn 0.2s ease}
+.modal{width:100%;max-width:600px;background:var(--card);border-radius:16px;padding:32px;box-shadow:var(--shadow-lg);transform-origin:center}
+.modal h3{margin:0 0 12px 0;font-size:24px;font-weight:800}
+.modal .muted{color:var(--muted);font-size:16px;line-height:1.5}
+
+.spinner{width:60px;height:60px;border-radius:999px;border:6px solid #e2e8f0;border-top-color:var(--accent);animation:spin 1s linear infinite; margin:0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* confirmation big check */
+.success-hero{display:flex;flex-direction:column;align-items:center;gap:16px;padding:32px 32px 16px 32px;text-align:center}
+.check{width:80px;height:80px;border-radius:999px;background:#ecfdf5;display:flex;align-items:center;justify-content:center;color:#059669; margin-bottom: 10px;}
+.check svg{width:40px;height:40px}
+.success-title{font-size:24px;font-weight:800;color:#059669}
+.success-sub{font-size:16px;color:var(--muted)}
+.reservation-receipt {width:100%;margin-top:16px;background:#f8fafc;padding:20px;border-radius:12px;border:1px solid #e2e8f0;text-align:left}
+
+/* small helpers */
+.muted{color:var(--muted)}
+.center{display:flex;justify-content:center;align-items:center}
+.link-like{background:transparent;border:0;color:var(--accent);cursor:pointer;font-weight:700}
+.link-like:hover{text-decoration:underline}
+
+.favorites-list{margin-top:16px;display:flex;flex-direction:column;gap:10px}
+.fav-item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;border:1px solid #e2e8f0;background:white;font-weight:600}
+
+/* =========================================
+   DASHBOARD & MAP LAYOUT STYLES
+   ========================================= */
+
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 1fr; /* Stacked by default on mobile */
+  gap: 24px;
+}
+
+/* The Map Container needs explicit height */
+#map {
+  width: 100%;
+  height: 350px;
+  border-radius:var(--radius);
+  border: none;
+  margin-top:0;
+  z-index: 1;
+}
+
+/* Desktop View for Dashboard */
+@media(min-width: 900px) {
+  .dashboard-layout {
+      /* Changed to proportional fractions for better symmetry */
+      grid-template-columns: 2fr 1fr;
+      align-items: start;
+  }
+
+  .dashboard-sidebar {
+      position: sticky;
+      top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+  }
+
+  #map {
+      height: 450px;
+  }
+}

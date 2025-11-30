@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SPARX</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%232563eb' d='M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM224 288v64H160V160h96c53 0 96 43 96 96s-43 96-96 96H224z'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-sA+q0k6k9Qv8g1kRkXy0v6vV6mZb3nK0bP+qkPQf0u8="
+  crossorigin=""/>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <div class="topbar" role="banner">
+    <div class="brand" aria-hidden="false">
+      <div class="logo" title="SPARX">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" fill="white"/><path d="M9 8v8M9 13h6a3 3 0 0 0 0-6H9" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="title">SPARX</div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div style="display:flex;gap:16px;align-items:center">
+      <div class="clock" id="liveClock" aria-live="polite">--:--:--</div>
+      <div class="topbar-actions" style="display:flex;gap:12px;align-items:center">
+        <button id="btnProfile" class="btn-ghost" title="Profile">Profile</button>
+        <button id="btnLogout" class="btn-ghost" title="Logout">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screens">
+
+    <div>
+
+      <section id="screen-login" class="panel screen active" aria-labelledby="loginTitle">
+        <div class="panel-title" style="margin-top: 8px;">
+          <h3 id="loginTitle">Welcome Back</h3>
+          <div class="small-muted">Sign in to access smart parking.</div>
+        </div>
+
+        <form id="loginForm" onsubmit="return false">
+          <div class="form-row">
+            <label for="email">Email Address</label>
+            <input id="email" type="email" placeholder="user@example.com" required />
+          </div>
+          <div class="form-row">
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="••••••••" required />
+          </div>
+          <div class="actions" style="display:block">
+            <button id="loginBtn" class="btn btn-primary" style="width:100%">Login</button>
+          </div>
+          <div style="margin-top:16px;font-size:14px;color:var(--muted)">
+            No account? Contact administration.
+          </div>
+        </form>
+      </section>
+
+      <section id="screen-choose" class="screen" aria-labelledby="chooseTitle">
+        <div class="dashboard-layout">
+
+            <div class="dashboard-main">
+                 <div class="panel card-compact" style="margin-bottom: 20px;">
+                    <div class="panel-title">
+                      <h3 id="chooseTitle">Dashboard</h3>
+                      <div class="small-muted" id="chooseSubtitle">Find and reserve a parking space.</div>
+                    </div>
+
+                    <div class="searchbar" style="margin-top:16px">
+                      <input id="searchInput" placeholder="Search by name, campus, or street..." />
+                      <button id="searchBtn" class="btn-search" title="Search">Search</button>
+                    </div>
+                 </div>
+
+                 <div id="spotsGrid" class="spots-grid" role="list" aria-live="polite">
+                   </div>
+            </div>
+
+            <div class="dashboard-sidebar">
+                <div class="panel card-compact map-panel" style="padding:0; overflow:hidden">
+                  <div id="map" aria-hidden="false"></div>
+                </div>
+
+                <div class="card-compact panel">
+                  <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-weight:700;font-size:16px">Quick Favorites</div>
+                    <button id="clearFavs" class="link-like" style="font-size:13px">Clear all</button>
+                  </div>
+                  <div id="favoritesList" class="favorites-list"></div>
+                </div>
+            </div>
+
+        </div>
+      </section>
+
+      <section id="screen-reserve" class="panel screen" aria-labelledby="reserveTitle">
+        <div class="panel-title">
+          <h3 id="reserveTitle">Finalize Reservation</h3>
+          <div class="small-muted" id="reserveSpotName">...</div>
+        </div>
+
+        <form id="reserveForm" onsubmit="return false" style="max-width:500px">
+          <div class="form-row">
+            <label for="rname">Driver Name</label>
+            <input id="rname" placeholder="e.g. Juan dela Cruz" required />
+          </div>
+
+          <div class="form-row">
+            <label for="rvehicle">Vehicle Model & Plate No.</label>
+            <input id="rvehicle" placeholder="e.g. Toyota Vios - ABC 1234" required />
+          </div>
+
+          <div class="form-row">
+            <label for="rdate">Reservation Date</label>
+            <input id="rdate" type="date" required />
+          </div>
+
+          <div class="actions">
+            <button id="confirmReserveBtn" class="btn btn-primary">Confirm Reservation</button>
+            <button id="backToChoose" class="btn btn-ghost">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="screen-confirm" class="panel screen" aria-labelledby="confirmTitle">
+        <div class="card-compact success-hero">
+          <div class="check" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="success-title">Reservation Confirmed!</div>
+          <div class="success-sub" id="successMessage">Your spot has been successfully booked.</div>
+
+          <div class="confirm-illu-container">
+            <svg class="illu-svg" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 78H96C99 78 102 75.5 102 72V34C102 30.5 99 28 96 28H24C21 28 18 30.5 18 34V72C18 75.5 21 78 24 78Z" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+              <path d="M18 53H102" stroke="#93C5FD" stroke-width="2" stroke-linecap="round"/>
+              <path d="M34 28V22C34 18.5 36.5 16 40 16H80C83.5 16 86 18.5 86 22V28" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+              <path d="M44 78V84C44 87.5 46.5 90 50 90H70C73.5 90 76 87.5 76 84V78" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="60" cy="53" r="12" fill="white" stroke="#2563EB" stroke-width="2"/>
+              <path d="M54 53L58 57L66 49" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 40H6" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+              <path d="M10 46H2" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+              <path d="M10 52H6" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+              <path d="M110 40H114" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+              <path d="M110 46H118" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+              <path d="M110 52H114" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <div class="reservation-receipt">
+            <div style="font-weight:700;font-size:18px;margin-bottom:4px" id="confSpot">...</div>
+            <div class="muted" id="confCampus" style="margin-bottom:16px">...</div>
+            <div class="muted">Reserved for</div>
+            <div style="font-weight:600;font-size:16px" id="confName">...</div>
+            <div style="margin-top:12px" class="muted">Date</div>
+            <div style="font-weight:600;font-size:16px" id="confDate">...</div>
+            <div style="margin-top:12px" class="muted">Reference ID</div>
+            <div style="font-weight:600;font-size:16px;font-family:monospace" id="confRef">...</div>
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:20px">
+            <button id="btnCancelRes" class="btn btn-ghost" style="color:#dc2626;border-color:#fee2e2;background:#fef2f2">Cancel Reservation</button>
+            <button id="btnDone" class="btn btn-primary">Return to Dashboard</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-manage" class="panel screen" aria-labelledby="manageTitle">
+        <div class="panel-title">
+          <h3 id="manageTitle">My Reservations</h3>
+          <div class="small-muted">Manage your active reservations.</div>
+        </div>
+
+        <div id="myReservations" style="margin-top:20px">
+          </div>
+        <div style="margin-top:20px">
+            <button id="backFromManage" class="btn btn-ghost">Back to Dashboard</button>
+        </div>
+      </section>
+
+    </div>
+
+    <aside class="preview">
+      <div class="card-compact panel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="account">
+            <div class="avatar" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" fill="currentColor" opacity="0.8"/><path d="M3 20c0-3.3 3.6-6 9-6s9 2.7 9 6" fill="currentColor" opacity="0.3"/></svg>
+            </div>
+            <div>
+              <div id="acctName" class="name">...</div>
+              <div class="small-muted" id="acctEmail">...</div>
+            </div>
+          </div>
+        </div>
+         <div style="margin-top:16px;display:flex;gap:10px">
+            <button id="manageBtn" class="btn btn-ghost" style="flex:1;font-size:14px">My Reservation</button>
+          </div>
+      </div>
+
+      <div class="card-compact panel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:800;font-size:24px;color:var(--accent)" id="spotCount">0</div>
+            <div class="small-muted" style="font-weight:600">Available Spots</div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button id="refreshBtn" class="btn btn-ghost" title="Refresh Data">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M21 21v-5h-5"/></svg>
+            </button>
+            <button id="helpBtn" class="btn btn-ghost" title="Help">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<div id="overlay" class="overlay" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal center" role="document" id="overlayContent" aria-live="polite">
+    </div>
+</div>
+
+<template id="confirmTemplate">
+  <div style="text-align:center">
+    <h3 id="ovTitle">Processing</h3>
+    <p class="muted" id="ovMessage">Please wait...</p>
+    <div style="margin-top:24px" class="center">
+      <div class="spinner" aria-hidden="true"></div>
+    </div>
+  </div>
+</template>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-o9N1j6k0b38H8FfKk3V4sKjGkTrkD6lZ3Kz3y3f6K6k="
+  crossorigin=""></script>
+<script src="app.js"></script>
+</body>
+</html>
